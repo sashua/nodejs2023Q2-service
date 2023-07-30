@@ -22,12 +22,12 @@ export class UserService {
     return this.db.user.findAll();
   }
 
-  findOne(id: string): User | null {
+  findOne(id: User['id']): User | null {
     return this.db.user.find(id);
   }
 
   updatePassword(
-    id: string,
+    id: User['id'],
     { oldPassword, newPassword }: UpdatePasswordDto,
   ): User | false | null {
     const user = this.findOne(id);

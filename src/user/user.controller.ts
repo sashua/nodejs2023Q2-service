@@ -40,7 +40,7 @@ export class UserController {
   @Get(':id')
   findOne(@Param() { id }: UserIdParams): UserEntity {
     const user = this.userService.findOne(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException();
     return new UserEntity(user);
   }
 
@@ -61,7 +61,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ): UserEntity {
     const user = this.userService.updateUser(id, updateUserDto);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException();
     return new UserEntity(user);
   }
 
@@ -69,6 +69,6 @@ export class UserController {
   @HttpCode(204)
   remove(@Param() { id }: UserIdParams): void {
     const user = this.userService.remove(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException();
   }
 }
