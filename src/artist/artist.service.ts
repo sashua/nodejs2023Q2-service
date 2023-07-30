@@ -29,6 +29,9 @@ export class ArtistService {
     albums.forEach(({ id }) => this.db.album.update(id, { artistId: null }));
     const tracks = this.db.track.findMany('artistId', id);
     tracks.forEach(({ id }) => this.db.track.update(id, { artistId: null }));
+    this.db.favorites.artists = this.db.favorites.artists.filter(
+      (artistId) => artistId !== id,
+    );
     return this.db.artist.delete(id);
   }
 }

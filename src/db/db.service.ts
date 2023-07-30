@@ -8,7 +8,7 @@ export class DbService {
   public track = new InmemoryTable<Track>();
   public album = new InmemoryTable<Album>();
   public artist = new InmemoryTable<Artist>();
-  private favorites: Favorites = {
+  public favorites: Favorites = {
     artists: [],
     albums: [],
     tracks: [],
