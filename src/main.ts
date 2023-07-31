@@ -6,10 +6,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') ?? 4000;
-
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   await app.listen(port);
 }
