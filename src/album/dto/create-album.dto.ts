@@ -1,3 +1,4 @@
+import { Album } from '@prisma/client';
 import {
   IsNotEmpty,
   IsOptional,
@@ -5,7 +6,6 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { Album } from '../../db/interfaces';
 
 export class CreateAlbumDto implements Omit<Album, 'id'> {
   @IsString()

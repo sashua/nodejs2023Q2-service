@@ -1,5 +1,5 @@
+import { User } from '@prisma/client';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../../db/interfaces';
 
 export class CreateUserDto implements Pick<User, 'login' | 'password'> {
   @IsString()

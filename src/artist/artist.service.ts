@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Artist } from '@prisma/client';
 import { DbService } from 'src/db/db.service';
-import { Artist } from 'src/db/interfaces';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
@@ -8,30 +8,23 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistService {
   constructor(private readonly db: DbService) {}
 
-  create(createArtistDto: CreateArtistDto): Artist {
-    return this.db.artist.create(createArtistDto);
+  create(data: CreateArtistDto): Promise<Artist> {
+    return this.db.artist.create({ data });
   }
 
-  findAll(): Artist[] {
-    return this.db.artist.findAll();
+  findAll(): Promise<Artist[]> {
+    return this.db.artist.findMany();
   }
 
-  findOne(id: Artist['id']): Artist | null {
-    return this.db.artist.find(id);
+  findOne(id: Artist['id']): Promise<Artist> {
+    return this.db.artist.findUniqueOrThrow({ where: { id } });
   }
 
-  update(id: Artist['id'], updateArtistDto: UpdateArtistDto): Artist | null {
-    return this.db.artist.update(id, updateArtistDto);
+  update(id: Artist['id'], data: UpdateArtistDto): Promise<Artist> {
+    return this.db.artist.update({ where: { id }, data });
   }
 
-  remove(id: Artist['id']): Artist | null {
-    const albums = this.db.album.findMany('artistId', id);
-    albums.forEach(({ id }) => this.db.album.update(id, { artistId: null }));
-    const tracks = this.db.track.findMany('artistId', id);
-    tracks.forEach(({ id }) => this.db.track.update(id, { artistId: null }));
-    this.db.favorites.artists = this.db.favorites.artists.filter(
-      (artistId) => artistId !== id,
-    );
-    return this.db.artist.delete(id);
+  remove(id: Artist['id']): Promise<Artist> {
+    return this.db.artist.delete({ where: { id } });
   }
 }
