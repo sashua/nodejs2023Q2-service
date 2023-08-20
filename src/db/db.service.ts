@@ -1,16 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Album, Artist, Favorites, Track, User } from './interfaces';
-import { InmemoryTable } from './lib/inmemory-table';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class DbService {
-  public user = new InmemoryTable<User>();
-  public track = new InmemoryTable<Track>();
-  public album = new InmemoryTable<Album>();
-  public artist = new InmemoryTable<Artist>();
-  public favorites: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
+export class DbService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() {
+    await this.$connect();
+  }
 }

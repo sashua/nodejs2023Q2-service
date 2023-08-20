@@ -6,7 +6,6 @@ import {
   ForbiddenException,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   Patch,
   Post,
@@ -26,49 +25,45 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): UserEntity {
-    const user = this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = await this.userService.create(createUserDto);
     return new UserEntity(user);
   }
 
   @Get()
-  findAll(): UserEntity[] {
-    const users = this.userService.findAll();
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.userService.findAll();
     return users.map((user) => new UserEntity(user));
   }
 
   @Get(':id')
-  findOne(@Param() { id }: UserIdParams): UserEntity {
-    const user = this.userService.findOne(id);
-    if (!user) throw new NotFoundException();
+  async findOne(@Param() { id }: UserIdParams): Promise<UserEntity> {
+    const user = await this.userService.findOne(id);
     return new UserEntity(user);
   }
 
   @Put(':id')
-  updatePassword(
+  async updatePassword(
     @Param() { id }: UserIdParams,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): UserEntity {
-    const user = this.userService.updatePassword(id, updatePasswordDto);
-    if (user === null) throw new NotFoundException();
-    if (user === false) throw new ForbiddenException();
+  ): Promise<UserEntity> {
+    const user = await this.userService.updatePassword(id, updatePasswordDto);
+    if (!user) throw new ForbiddenException();
     return new UserEntity(user);
   }
 
   @Patch(':id')
-  updateUser(
+  async updateUser(
     @Param() { id }: UserIdParams,
     @Body() updateUserDto: UpdateUserDto,
-  ): UserEntity {
-    const user = this.userService.updateUser(id, updateUserDto);
-    if (!user) throw new NotFoundException();
+  ): Promise<UserEntity> {
+    const user = await this.userService.updateUser(id, updateUserDto);
     return new UserEntity(user);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param() { id }: UserIdParams): void {
-    const user = this.userService.remove(id);
-    if (!user) throw new NotFoundException();
+  async remove(@Param() { id }: UserIdParams): Promise<void> {
+    await this.userService.remove(id);
   }
 }

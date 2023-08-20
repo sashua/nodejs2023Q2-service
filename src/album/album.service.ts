@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Album } from '@prisma/client';
 import { DbService } from 'src/db/db.service';
-import { Album } from 'src/db/interfaces';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
@@ -8,28 +8,23 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 export class AlbumService {
   constructor(private readonly db: DbService) {}
 
-  create(createAlbumDto: CreateAlbumDto): Album {
-    return this.db.album.create(createAlbumDto);
+  create(data: CreateAlbumDto): Promise<Album> {
+    return this.db.album.create({ data });
   }
 
-  findAll(): Album[] {
-    return this.db.album.findAll();
+  findAll(): Promise<Album[]> {
+    return this.db.album.findMany();
   }
 
-  findOne(id: Album['id']): Album | null {
-    return this.db.album.find(id);
+  findOne(id: Album['id']): Promise<Album> {
+    return this.db.album.findUniqueOrThrow({ where: { id } });
   }
 
-  update(id: Album['id'], updateAlbumDto: UpdateAlbumDto): Album | null {
-    return this.db.album.update(id, updateAlbumDto);
+  update(id: Album['id'], data: UpdateAlbumDto): Promise<Album> {
+    return this.db.album.update({ where: { id }, data });
   }
 
-  remove(id: Album['id']): Album | null {
-    const tracks = this.db.track.findMany('albumId', id);
-    tracks.forEach(({ id }) => this.db.track.update(id, { albumId: null }));
-    this.db.favorites.albums = this.db.favorites.albums.filter(
-      (albumId) => albumId !== id,
-    );
-    return this.db.album.delete(id);
+  remove(id: Album['id']): Promise<Album> {
+    return this.db.album.delete({ where: { id } });
   }
 }

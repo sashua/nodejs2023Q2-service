@@ -1,4 +1,4 @@
-import { Album, Artist, Track } from 'src/db/interfaces';
+import { Album, Artist, Track } from '@prisma/client';
 
 export interface FavoritesResponse {
   artists: Artist[];
