@@ -7,13 +7,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { Artist } from '@prisma/client';
+import { AccessGuard } from 'src/auth/guards/access.guard';
 import { ArtistService } from './artist.service';
 import { ArtistIdParams } from './dto/artist-id.params';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
+@UseGuards(AccessGuard)
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

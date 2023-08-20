@@ -7,13 +7,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { Track } from '@prisma/client';
+import { AccessGuard } from 'src/auth/guards/access.guard';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { TrackIdParams } from './dto/track-id.params';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackService } from './track.service';
 
+@UseGuards(AccessGuard)
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
