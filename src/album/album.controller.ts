@@ -7,13 +7,16 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { Album } from '@prisma/client';
 import { AlbumService } from './album.service';
 import { AlbumIdParams } from './dto/album-id.params';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AccessGuard } from 'src/auth/guards/access.guard';
 
+@UseGuards(AccessGuard)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}

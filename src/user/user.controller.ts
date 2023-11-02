@@ -10,8 +10,10 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AccessGuard } from 'src/auth/guards/access.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,6 +21,7 @@ import { UserIdParams } from './dto/user-id.params';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 
+@UseGuards(AccessGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
